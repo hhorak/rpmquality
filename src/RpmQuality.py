@@ -12,7 +12,7 @@ class RpmQuality:
                       "RpmLint": 30}
 
     def __init__(self, packages=[], scl_name=None, logs_location="logs",
-                 extra_modules_dir=None, extra_modules={}, user_id=None):
+                 extra_modules_dir=None, extra_modules={}):
         self._packages = packages
         self._scl_name = scl_name
         self._modules_dir = "modules"
@@ -20,7 +20,6 @@ class RpmQuality:
         self._extra_modules = extra_modules
         self._weights_sum = self._weights_sum_compute()
         self._logs_location = logs_location
-        self._user_id = user_id
 
     def _weights_sum_compute(self):
         sum = 0
@@ -78,8 +77,7 @@ class RpmQuality:
             mod_class = getattr(mod_obj, module_name)
             mod_inst = mod_class(scl_name = self._scl_name,
                                  packages = self._packages,
-                                 log_file=log_file,
-                                 user_id=self._user_id)
+                                 log_file=log_file)
             
             # perform the test
             result = mod_inst.perform()
