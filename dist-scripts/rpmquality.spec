@@ -1,5 +1,5 @@
 Name:		rpmquality
-Version:	0
+Version:	0.1
 Release:	0.1%{?dist}
 Summary:	Tool for assessing RPM quality
 
@@ -21,21 +21,24 @@ The final number says how good the RPM is.
 
 
 %build
-
+%{__python} setup.py build
 
 %install
+%{__python} setup.py install --skip-build --root %{buildroot}
 
 #install -dp -m 0644 %{buildroot}%{_bindir}
-mkdir -p %{buildroot}%{python_sitelib}/%{name}
-pushd src
-cp -r --parents -p * %{buildroot}%{python_sitelib}/%{name}
-popd
+#mkdir -p %{buildroot}%{python_sitelib}/%{name}
+#pushd src
+#cp -r --parents -p * %{buildroot}%{python_sitelib}/%{name}
+#popd
 
 %files
-%doc README LICENSE
+%doc README.rst LICENSE
+%{_bindir}/%{name}
 %{python_sitelib}/%{name}/*.py*
 %{python_sitelib}/%{name}/modules/*.py*
-%{python_sitelib}/%{name}/softwarecollectios_modules/*.py*
+#%{python_sitelib}/%{name}/softwarecollectios_modules/*.py*
+%{python_sitelib}/%{name}-%{version}-py?.?.egg-info
 
 
 %changelog

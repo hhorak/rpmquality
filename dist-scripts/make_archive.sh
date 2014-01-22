@@ -1,19 +1,25 @@
 #!/bin/sh
 
-if [ $# -ne 1 ] ; then
-    echo "Usage: `basename $0` version"
+if [ $1 == '-h' ] ; then
+    echo "Usage: `basename $0` [version]"
     exit 1
 fi
 
-ARCHIVE_DIR="rpmquality-$1"
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+VERSION=`cat $SCRIPT_DIR/../VERSION`
+VERSION=${1:-$VERSION}
+
+ARCHIVE_DIR="rpmquality-${VERSION}"
+
 rm -rf $ARCHIVE_DIR
 mkdir $ARCHIVE_DIR
 
-cp -p --parents ./dist/*.spec $ARCHIVE_DIR
-cp -p --parents ./src/softwarecollectios_modules/*.py $ARCHIVE_DIR
-cp -p --parents ./src/modules/*.py $ARCHIVE_DIR
-cp -p --parents ./src/*.py $ARCHIVE_DIR
-cp -p ./README ./LICENSE $ARCHIVE_DIR
+cp -p --parents ./dist-scripts/*.spec $ARCHIVE_DIR
+cp -p --parents ./rpmquality/RpmQuality.py $ARCHIVE_DIR
+cp -p --parents ./rpmquality/modules/*.py $ARCHIVE_DIR
+cp -p --parents ./rpmquality/*.py $ARCHIVE_DIR
+cp -p ./README.* ./LICENSE MANIFEST.in $ARCHIVE_DIR
+cp -p ./setup.py $ARCHIVE_DIR
 
 tar -pczvf "${ARCHIVE_DIR}.tar.gz" $ARCHIVE_DIR
 
