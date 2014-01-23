@@ -12,7 +12,7 @@ class RpmQuality:
                       "RpmLint": 30}
 
     def __init__(self, packages=[], scl_name=None, logs_location="logs",
-                 extra_modules_dir=None, extra_modules={}):
+                 extra_modules_dir=None, extra_modules={}, working_dir=None):
         self._app_root = os.path.dirname(os.path.abspath(__file__))
         self._packages = packages
         self._scl_name = scl_name
@@ -21,6 +21,7 @@ class RpmQuality:
         self._extra_modules = extra_modules
         self._weights_sum = self._weights_sum_compute()
         self._logs_location = logs_location
+        self._working_dir = working_dir
 
     def _weights_sum_compute(self):
         """
@@ -69,23 +70,28 @@ class RpmQuality:
         final_score = 0
         final_results = {"score": 0, "results": []}
 
-        # create logs directory if not exists
+        # create logs and working directories if not exist
         if not os.path.isdir(self._logs_location):
             os.makedirs(self._logs_location, 0755)
+        if not os.path.isdir(self._working_dir):
+            os.makedirs(self._working_dir, 0755)
 
         self._modules = dict(self._basic_modules.items() + self._extra_modules.items())
         for module_name in self._modules:
             # where we want results (log), working directory, etc.
             log_file = os.path.join(self._logs_location, "%s.log" % module_name)
-            working_dir = os.path.join(self._logs_location, "%s-working" % module_name)
+            # working_dir = os.path.join(self._working_dir, logs_location, "%s-working" % module_name)
 
             # import every module separately
             mod_obj = __import__(module_name, fromlist = [])
             mod_class = getattr(mod_obj, module_name)
+            old_cwd = os.path.abspath(os.path.curdir)
+            os.chdir(self._working_dir)
             mod_inst = mod_class(scl_name = self._scl_name,
                                  packages = self._packages,
                                  log_file = log_file,
-                                 working_dir = working_dir)
+                                 working_dir = self._working_dir)
+            os.chdir(old_cwd)
             
             # perform the test
             result = mod_inst.perform()

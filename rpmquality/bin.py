@@ -25,13 +25,15 @@ def usage():
     print("  -h, --help             Prints help")
     print("  -V, --version          Prints version info")
     print("  -v, --verbose          Prints more verbose degug output during scan")
-    print("  -l, --logdir           Change log file location of result, default: /var/tmp/rpmqualityYYYYmmddHHMMSS")
+    print("  -l, --logdir           Change log file location of result, default: /var/tmp/rpmqualityYYYYmmddHHMMSS/logs")
+    print("  -w, --working-dir      Change log file location of result, default: /var/tmp/rpmqualityYYYYmmddHHMMSS/working_dir")
     print("  -s, --sclname          Name of the Software Collection if aplicable for the package")
     print
     print("Examples:")
     print("  %s -h" % progname)
     print("  %s -v foo.rpm bar.rpm" % progname)
     print("  %s -l /var/tmp/foo foo.rpm" % progname)
+    print("  %s -w /var/tmp/bar foo.rpm" % progname)
     print("  %s --sclname foo42 foo42-foo.rpm" % progname)
     exit(1)
 
@@ -50,7 +52,9 @@ def main():
     verbose = False
     packages = []
     scl_name = None
-    logs = "/var/tmp/rpmquality%s" % datetime.datetime.now().strftime('%Y%m%d%H%M%S%Z')
+    tmp_dir = "/var/tmp/rpmquality%s" % datetime.datetime.now().strftime('%Y%m%d%H%M%S%Z')
+    logs = os.path.join(tmp_dir, "logs")
+    working_dir = os.path.join(tmp_dir, "working_dir")
 
     # parsing arguments
     args = list(sys.argv)
@@ -66,15 +70,17 @@ def main():
             verbose = True
         elif args and (arg == "-l" or arg == "--logs"):
             logs = args.pop()
+        elif args and (arg == "-w" or arg == "--working-dir"):
+            working_dir = args.pop()
         elif args and (arg == "-s" or arg == "--scl"):
             scl_name = args.pop()
         else:
             if os.path.isfile(arg) and re.match(r".*\.rpm$", arg):
-                packages.append(arg)
+                packages.append(os.path.abspath(arg))
             elif os.path.isdir(arg):
                 for f in os.listdir(arg):
                     if re.match(r".*\.rpm$", f):
-                        packages.append(os.path.join(arg, f))
+                        packages.append(os.path.abspath(os.path.join(arg, f)))
             else:
                 print("Argument %s is not rpm nor valid argument." % arg)
                 usage()
@@ -100,12 +106,13 @@ def main():
         print("Verbose: %s" % verbose)
         print("SCL name: %s" % scl_name)
         print("Logs location: %s" % logs)
+        print("Working directory location: %s" % working_dir)
         print("Packages:")
         for rpm in packages:
             print(rpm)
 
     rp = RpmQuality.RpmQuality(packages=packages, scl_name=scl_name,
-                               logs_location=logs
+                               logs_location=logs, working_dir=working_dir
                                #,
                                #extra_modules_dir="softwarecollectios_modules",
                                #extra_modules={"UserFavour": 60},
