@@ -1,0 +1,5 @@
+Some wild ideas what to implement:
+* get all RPMs and build.log from a directory (even recursivly)
+* pass build log to modules
+* implement connection to rpmgrill
+* license check module
