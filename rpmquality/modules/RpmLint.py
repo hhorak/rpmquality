@@ -1,6 +1,7 @@
 import re
 import subprocess
 import DefaultModule
+import locale
 
 class RpmLint(DefaultModule.DefaultModule):
     """
@@ -48,8 +49,9 @@ class RpmLint(DefaultModule.DefaultModule):
             files_checked = 0
             try:
                 print("Calling %s %s" % ("rpmlint", package))
-                out = subprocess.check_output(["rpmlint", package])
-                    
+                encoding = locale.getdefaultlocale()[1]
+                out = subprocess.check_output(["rpmlint", package]).decode(encoding)
+
             except subprocess.CalledProcessError as e:
                 out = e.output
                 

@@ -76,7 +76,8 @@ class RpmQuality:
         if not os.path.isdir(self._working_dir):
             os.makedirs(self._working_dir, 0o755)
 
-        self._modules = dict(self._basic_modules.items() + self._extra_modules.items())
+        self._modules = self._basic_modules.copy()
+        self._modules.update(self._extra_modules.items())
         for module_name in self._modules:
             # where we want results (log), working directory, etc.
             log_file = os.path.join(self._logs_location, "%s.log" % module_name)
