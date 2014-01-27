@@ -8,18 +8,19 @@ import re
 import datetime
 
 
+def progname():
+    return "rpmquality"
+
 def version():
-    progname = os.path.basename(__file__)
-    print("%s 0.1" % progname)
+    print("%s 0.1" % progname())
     print
     print("Written by Honza Horak <hhorak@redhat.com>")
     exit(0)
 
 def usage():
-    progname = os.path.basename(__file__)
-    print("%s analysis quality of individual RPM packages and reports various kinds of results" % progname)
+    print("%s analysis quality of individual RPM packages and reports various kinds of results" % progname())
     print
-    print("Usage: %s package [ package, package, dir, ... ]" % progname)
+    print("Usage: %s package [ package, package, dir, ... ]" % progname())
     print
     print("Options:")
     print("  -h, --help             Prints help")
@@ -30,11 +31,11 @@ def usage():
     print("  -s, --sclname          Name of the Software Collection if aplicable for the package")
     print
     print("Examples:")
-    print("  %s -h" % progname)
-    print("  %s -v foo.rpm bar.rpm" % progname)
-    print("  %s -l /var/tmp/foo foo.rpm" % progname)
-    print("  %s -w /var/tmp/bar foo.rpm" % progname)
-    print("  %s --sclname foo42 foo42-foo.rpm" % progname)
+    print("  %s -h" % progname())
+    print("  %s -v foo.rpm bar.rpm" % progname())
+    print("  %s -l /var/tmp/foo foo.rpm" % progname())
+    print("  %s -w /var/tmp/bar foo.rpm" % progname())
+    print("  %s --sclname foo42 foo42-foo.rpm" % progname())
     exit(1)
 
 
