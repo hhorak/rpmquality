@@ -1,4 +1,8 @@
+%if 0%{?fedora}
 %bcond_without	python3
+%else
+%bcond_with	python3
+%endif
 
 Name:		rpmquality
 Version:	0.1
