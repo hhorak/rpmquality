@@ -3,3 +3,4 @@ Some wild ideas what to implement:
 * pass build log to modules
 * implement connection to rpmgrill
 * license check module
+* output should be logged as well, maybe in some easily parse-able format (yaml, json?)
