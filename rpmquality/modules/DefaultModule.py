@@ -20,7 +20,7 @@ class DefaultModule:
 
     def _get_working_dir(self):
         if not os.path.exists(self._working_dir):
-            os.mkdir(self._working_dir, 0644)
+            os.mkdir(self._working_dir, mode=0o755)
         return self._working_dir
 
     def _is_src():

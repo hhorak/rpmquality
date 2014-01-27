@@ -72,9 +72,9 @@ class RpmQuality:
 
         # create logs and working directories if not exist
         if not os.path.isdir(self._logs_location):
-            os.makedirs(self._logs_location, 0755)
+            os.makedirs(self._logs_location, 0o755)
         if not os.path.isdir(self._working_dir):
-            os.makedirs(self._working_dir, 0755)
+            os.makedirs(self._working_dir, 0o755)
 
         self._modules = dict(self._basic_modules.items() + self._extra_modules.items())
         for module_name in self._modules:
