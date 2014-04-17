@@ -1,0 +1,20 @@
+#!/bin/bash
+
+if [ $# -ne 1 ] ; then
+  echo "Usage `basename $0` path_to_spec_file"
+  exit 0
+fi
+
+if [ ! -f $1 ] ; then
+  "Spec file $1 does not exist."
+  exit 1
+fi
+
+rm -rf rpmbuild-root/*
+mkdir rpmbuild-root/SPECS/
+
+copied_spec="rpmbuild-root/SPECS/`basename $1`"
+cp $1 $copied_spec
+
+rpmbuild --clean --define "_topdir ${PWD}/rpmbuild-root/" -ba $copied_spec
+

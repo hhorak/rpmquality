@@ -1,0 +1,23 @@
+#!/bin/bash
+
+export LC_ALL=C
+
+logs_dir="${PWD}/logs"
+rm -rf $logs_dir
+
+# create func for OK/FAIL
+
+./createrpm data/foo.spec &>/dev/null
+
+pushd ../src &>/dev/null
+
+./rpmquality --logs $logs_dir ../tests/rpmbuild-root/SRPMS/foo-*.src.rpm &>/dev/null
+
+popd &>/dev/null
+
+if grep -e 'bogus date in %changelog: Thu Jan 25 2013' $logs_dir/RpmLint.log &>/dev/null; then
+  echo "[ OK ]   Checking for bogus date"
+else
+  echo "[ FAIL ] Checking for bogus date"
+fi
+
